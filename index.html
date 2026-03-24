@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🏛️ 전생의 죄명 판독기</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css" />
+    <style>
+        :root { --main-gold: #d4af37; --bg: #ffffff; --text: #2d3436; }
+        body { margin: 0; font-family: 'Pretendard', sans-serif; background: var(--bg); color: var(--text); display: flex; align-items: center; justify-content: center; min-height: 100vh; overflow: hidden; }
+        
+        .app-card { width: 90%; max-width: 450px; text-align: center; padding: 40px 20px; border: 2px solid #eee; border-radius: 30px; box-shadow: 0 10px 40px rgba(0,0,0,0.05); }
+        h1 { font-size: 1.8rem; font-weight: 900; margin-bottom: 10px; color: #1e272e; }
+        .subtitle { color: #888; font-size: 0.9rem; margin-bottom: 40px; }
+
+        .input-group { margin-bottom: 30px; }
+        input { width: 80%; padding: 15px; border: 2px solid #f1f2f6; border-radius: 15px; font-size: 1.1rem; text-align: center; outline: none; transition: 0.3s; }
+        input:focus { border-color: var(--main-gold); box-shadow: 0 0 10px rgba(212, 175, 55, 0.2); }
+
+        button { background: var(--text); color: white; border: none; padding: 18px 40px; border-radius: 15px; font-size: 1.2rem; font-weight: 800; cursor: pointer; transition: 0.3s; width: 80%; }
+        button:hover { transform: translateY(-3px); box-shadow: 0 10px 20px rgba(0,0,0,0.1); }
+
+        /* 결과 팝업 */
+        #result-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: white; z-index: 100; flex-direction: column; align-items: center; justify-content: center; padding: 20px; text-align: center; animation: fadeIn 0.5s forwards; }
+        .result-box { max-width: 400px; }
+        .result-name { font-size: 1.2rem; color: #636e72; margin-bottom: 10px; }
+        .result-crime { font-size: 2.2rem; font-weight: 900; color: #d63031; margin-bottom: 25px; line-height: 1.3; word-break: keep-all; }
+        .result-desc { font-size: 1.1rem; line-height: 1.6; color: #2d3436; background: #f9f9f9; padding: 20px; border-radius: 20px; border-left: 5px solid var(--main-gold); text-align: left; }
+        
+        .reset-btn { margin-top: 40px; background: none; border: 1px solid #ccc; color: #999; padding: 10px 20px; font-size: 0.9rem; width: auto; }
+
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+    </style>
+</head>
+<body>
+
+    <div class="app-card">
+        <h1>🏛️ 전생 죄명 판독</h1>
+        <p class="subtitle">현생의 고통은 전생의 업보로부터 시작됩니다.</p>
+
+        <div class="input-group">
+            <input type="text" id="user-name" placeholder="이름을 입력하십시오" maxlength="5">
+        </div>
+
+        <button onclick="revealTruth()">명부 확인 (실시!)</button>
+    </div>
+
+    <div id="result-overlay">
+        <div class="result-box">
+            <div class="result-name" id="res-name">홍길동 훈련병</div>
+            <div class="result-crime" id="res-crime">죄명: "장터 국밥 고기만 골라먹은 죄"</div>
+            <div id="res-desc" class="result-desc">
+                당신은 조선시대 주막에서 국밥을 시킨 뒤, 남의 눈을 피해 고기만 쏙쏙 골라먹어 동네 인심을 흉흉하게 만들었습니다. 그 업보로 현생에서는 맛집에 갈 때마다 미묘하게 고기가 적은 그릇을 받게 될 운명입니다.
+            </div>
+            <button class="reset-btn" onclick="location.reload()">부대로 복귀하기</button>
+        </div>
+    </div>
+
+    <script>
+        // 형님의 novel 작가적 감성을 담은 킹받는 죄명 리스트
+        const crimes = [
+            { title: "장터 국밥 고기만 골라먹은 죄", desc: "주막에서 국밥을 시킨 뒤 숟가락 스킬을 발휘해 남의 고기까지 슬쩍했습니다. 그 업보로 현생에서는 배달 음식을 시킬 때마다 리뷰 이벤트 서비스를 못 받을 운명입니다." },
+            { title: "이웃집 고구마 서리 후 모른 척한 죄", desc: "밤중에 옆집 밭에서 고구마를 서리하다 걸릴 뻔하자, 애꿎은 산짐승 흉내를 내며 위기를 모면했습니다. 현생에서는 중요한 순간마다 딸꾹질이 터질 것입니다." },
+            { title: "과거 시험 날 컨닝페이퍼 버리고 튄 죄", desc: "옆자리 유생의 답안을 훔쳐보고는, 증거 인멸을 위해 컨닝페이퍼를 그 사람 가방에 넣고 도망갔습니다. 현생에서는 남이 싼 똥을 치우는 업무만 맡게 됩니다." },
+            { title: "주막에서 계산할 때 신발 끈만 묶은 죄", desc: "일행들이 계산할 때마다 귀신같이 신발 끈을 고쳐 묶으며 시간을 끌었습니다. 그 업보로 현생에서는 지인들과의 단톡방에서 항상 읽씹을 당하게 됩니다." },
+            { title: "왕의 어전에서 몰래 방귀 뀌고 옆 사람 쳐다본 죄", desc: "엄숙한 조회 시간에 조용히 가스를 배출하고는 옆에 있던 대감을 경멸스럽게 쳐다봤습니다. 현생에서는 중요한 미팅 때마다 배꼽시계가 아주 크게 울릴 것입니다." },
+            { title: "비 오는 날 진흙탕물 튀기고 도망간 죄", desc: "말을 타고 지나가며 길가에 있던 선비들에게 진흙탕물을 흠뻑 뿌리고는 비웃으며 지나갔습니다. 현생에서는 새로 산 신발을 신는 날마다 비가 올 운명입니다." }
+        ];
+
+        function revealTruth() {
+            const name = document.getElementById('user-name').value;
+            if(!name) { alert("이름을 입력해야 명부를 열 수 있습니다!"); return; }
+
+            // 이름의 글자 코드를 합쳐서 일정한 결과가 나오게 (랜덤이지만 이름당 고정)
+            let hash = 0;
+            for (let i = 0; i < name.length; i++) { hash += name.charCodeAt(i); }
+            const selected = crimes[hash % crimes.length];
+
+            // 팝업 띄우기
+            document.getElementById('res-name').innerText = name + " 전우의 전생";
+            document.getElementById('res-crime').innerText = `"${selected.title}"`;
+            document.getElementById('res-desc').innerText = selected.desc;
+            document.getElementById('result-overlay').style.display = 'flex';
+        }
+    </script>
+</body>
+</html>
