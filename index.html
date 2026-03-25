@@ -8,7 +8,7 @@
     <style>
         :root { --spirit-red: #d63031; --spirit-gold: #f1c40f; --dark: #000000; }
         
-        body { margin: 0; font-family: 'Pretendard', sans-serif; background: var(--dark); color: #fff; display: flex; align-items: center; justify-content: center; min-height: 100vh; overflow: hidden; }
+        body { margin: 0; font-family: 'Pretendard', sans-serif; background: var(--dark); color: #fff; display: flex; align-items: center; justify-content: center; min-height: 100vh; overflow-x: hidden; }
         
         .shrine-bg { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: radial-gradient(circle, #1a1a1a 0%, #000 100%); z-index: -1; }
         .shrine-bg::after { content: ''; position: absolute; width: 100%; height: 100%; background: url('https://www.transparenttextures.com/patterns/dark-leather.png'); opacity: 0.3; }
@@ -40,21 +40,34 @@
         }
         .btn-invoke:hover { background: #b32d2d; transform: scale(1.05); }
 
+        /* 결과창 오버레이 */
         #result-overlay { 
             display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; 
-            background: rgba(0,0,0,0.95); z-index: 100; flex-direction: column; 
-            align-items: center; justify-content: center; padding: 20px;
+            background: rgba(0,0,0,0.98); z-index: 100; flex-direction: column; 
+            align-items: center; justify-content: center; padding: 20px; overflow-y: auto;
         }
         .amulet { 
-            background: #fdf2f2; border: 5px double var(--spirit-red); padding: 40px 20px; 
-            max-width: 400px; color: var(--spirit-red); box-shadow: 0 0 30px rgba(214, 48, 49, 0.5);
+            background: #fdf2f2; border: 5px double var(--spirit-red); padding: 30px 20px; 
+            width: 90%; max-width: 400px; color: var(--spirit-red); box-shadow: 0 0 30px rgba(214, 48, 49, 0.5);
             position: relative; animation: pop 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
         }
         .amulet-seal { position: absolute; top: 10px; right: 10px; border: 1px solid var(--spirit-red); padding: 3px; font-size: 0.7rem; font-weight: 900; opacity: 0.5; }
         
-        .res-name { font-size: 1.2rem; margin-bottom: 10px; font-weight: 700; border-bottom: 1px solid var(--spirit-red); display: inline-block; color: #333; }
-        .res-crime { font-size: 1.8rem; font-weight: 900; margin: 20px 0; line-height: 1.3; }
-        .res-desc { font-size: 1.05rem; line-height: 1.6; text-align: left; background: rgba(255,255,255,0.7); padding: 15px; border-radius: 5px; font-weight: 600; color: #111; word-break: keep-all; }
+        .res-name { font-size: 1.1rem; margin-bottom: 10px; font-weight: 700; border-bottom: 1px solid var(--spirit-red); display: inline-block; color: #333; }
+        .res-crime { font-size: 1.6rem; font-weight: 900; margin: 15px 0; line-height: 1.3; }
+        .res-desc { font-size: 1rem; line-height: 1.6; text-align: left; background: rgba(255,255,255,0.7); padding: 15px; border-radius: 5px; font-weight: 600; color: #111; word-break: keep-all; }
+
+        /* 🚀 쿠팡 바디워시 배너 스타일 */
+        .coupang-banner {
+            margin-top: 20px; width: 90%; max-width: 400px;
+            background: #111; border: 2px solid var(--spirit-gold); border-radius: 10px;
+            padding: 15px; text-decoration: none; display: block; transition: 0.2s;
+            box-shadow: 0 0 15px rgba(241, 196, 15, 0.2);
+        }
+        .coupang-banner:active { transform: scale(0.98); }
+        .cp-tag { color: var(--spirit-gold); font-size: 0.8rem; font-weight: bold; margin-bottom: 5px; display: block; }
+        .cp-title { color: #fff; font-size: 1rem; font-weight: 800; line-height: 1.4; }
+        .cp-sub { color: #666; font-size: 0.65rem; margin-top: 10px; font-family: sans-serif; }
 
         @keyframes flicker { 0% { opacity: 0.8; } 50% { opacity: 1; } 100% { opacity: 0.9; } }
         @keyframes float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-10px); } }
@@ -86,8 +99,14 @@
             <div id="res-name" class="res-name"></div>
             <div id="res-crime" class="res-crime"></div>
             <div id="res-desc" class="res-desc"></div>
-            <button style="margin-top: 40px; width: 100%; background: #000; color: #fff; border: none; padding: 15px; font-weight: 900; cursor: pointer;" onclick="location.reload()">살풀이 완료 (물러가기)</button>
+            <button style="margin-top: 25px; width: 100%; background: #000; color: #fff; border: none; padding: 12px; font-weight: 900; cursor: pointer; border-radius: 5px;" onclick="location.reload()">살풀이 완료 (물러가기)</button>
         </div>
+
+        <a href="https://link.coupang.com/a/ea5Zs4" target="_blank" class="coupang-banner">
+            <span class="cp-tag">✨ 전생의 업보까지 싹- 닦아내기</span>
+            <div class="cp-title">죄는 미워하되 몸은 미워 말라!<br><span style="color:var(--spirit-gold)">천연 성분 바디워시</span>로 묵은 죄 정화 👉</div>
+            <div class="cp-sub">이 포스팅은 쿠팡 파트너스 활동의 일환으로, 이에 따른 일정액의 수수료를 제공받습니다.</div>
+        </a>
     </div>
 
     <script>
@@ -111,7 +130,7 @@
             { title: "길가던 선비 짚신 한 짝 훔친 죄", desc: "나그네를 절름발이로 만들었구나! 현생에선 마트 주차장 구석에 차를 대면 꼭 나갈 때 남의 차가 길을 막으리라." },
             { title: "서당 개에게 돌 던져 면학 분위기 흐린 죄", desc: "면학 분위기를 방해한 죄로다! 현생에선 집중 좀 하려 하면 윗집에서 인테리어 공사를 시작하리라." },
             { title: "이웃집 잔치 국수에 소금 한 주먹 넣은 죄", desc: "남의 잔칫상을 망쳐놓은 죄로다! 현생에선 배달 앱으로 주문할 때마다 주문 누락 서러움을 겪으리라." },
-            { title: "남의 신발 속에 압정 숨겨둔 죄", desc: "걸음걸이마다 고통을 줬구나! 현생에선 새 신발 신는 날마다 뒤꿈치가 다 까져 절뚝거리리라." },
+            { title: "남의 집 신발 속에 압정 숨겨둔 죄", desc: "걸음걸이마다 고통을 줬구나! 현생에선 새 신발 신는 날마다 뒤꿈치가 다 까져 절뚝거리리라." },
             { title: "우물물에 몰래 설사약 탄 죄", desc: "동네 사람들을 뒷간 귀신으로 만들었군! 현생에선 만원 지하철 장거리 이동 때마다 급똥 신호가 오리라." },
             { title: "잠자는 호랑이 수염 뽑으러 간 죄", desc: "객기로 사람들을 피곤하게 했구나! 현생에선 상사가 제일 빡쳐 있을 때만 골라 결재를 올리러 가게 되리라." },
             { title: "남의 집 소 꼬리에 방울 달아 도망가게 한 죄", desc: "농사지을 소를 놀라게 했군! 현생에선 알람을 5개 맞춰도 다 무의식에 끄고 지각하는 비극을 겪으리라." },
@@ -206,19 +225,15 @@
             const name = document.getElementById('user-name').value.trim();
             if(!name) { alert("성명을 대지 않으면 작두를 탈 수 없다!"); return; }
 
-            // 이름의 글자 코드를 합쳐서 고정 해시값 생성 (같은 이름 = 항상 같은 결과)
             let hash = 0;
             for (let i = 0; i < name.length; i++) { hash += name.charCodeAt(i); }
             
-            // 108개의 리스트 중에서 선택
             const selected = karmaList[hash % karmaList.length];
 
-            // 결과창에 데이터 쏘기
             document.getElementById('res-name').innerText = name + "의 108 전생 업보";
             document.getElementById('res-crime').innerText = `"${selected.title}"`;
             document.getElementById('res-desc').innerText = selected.desc;
             
-            // 부적 오버레이 띄우기
             document.getElementById('result-overlay').style.display = 'flex';
         }
     </script>
