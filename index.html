@@ -6,20 +6,21 @@
     <title>🕯️ 108 전생 업보 작두 판독기</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css" />
     <style>
-        :root { --spirit-red: #d63031; --spirit-gold: #f1c40f; --dark: #000000; }
+        :root { --spirit-red: #d63031; --spirit-gold: #f1c40f; --dark: #000000; --kakao-yellow: #fee500; }
         
         body { margin: 0; font-family: 'Pretendard', sans-serif; background: var(--dark); color: #fff; display: flex; align-items: center; justify-content: center; min-height: 100vh; overflow: hidden; }
         
         .shrine-bg { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: radial-gradient(circle, #1a1a1a 0%, #000 100%); z-index: -1; }
         .shrine-bg::after { content: ''; position: absolute; width: 100%; height: 100%; background: url('https://www.transparenttextures.com/patterns/dark-leather.png'); opacity: 0.3; }
 
-        /* ☕ 최상단 커피 선물 계좌 바 */
+        /* ☕ 최상단 카카오페이 송금 바 */
         .top-account-bar {
-            position: fixed; top: 0; left: 0; width: 100%; background: rgba(214, 48, 49, 0.9);
-            color: #fff; padding: 10px 0; text-align: center; z-index: 300; font-weight: 800;
-            font-size: 0.9rem; border-bottom: 2px solid var(--spirit-gold); cursor: pointer;
+            position: fixed; top: 0; left: 0; width: 100%; background: var(--kakao-yellow);
+            color: #3c1e1e; padding: 12px 0; text-align: center; z-index: 300; font-weight: 800;
+            font-size: 0.95rem; border-bottom: 2px solid #000; cursor: pointer;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.5);
         }
-        .top-account-bar:active { background: var(--spirit-gold); color: #000; }
+        .top-account-bar:active { background: #fada0a; }
 
         .shaman-card { 
             width: 90%; max-width: 450px; text-align: center; padding: 40px 20px; 
@@ -77,8 +78,8 @@
 </head>
 <body>
 
-    <div class="top-account-bar" onclick="copyAccount()">
-        ☕ 무사히 살풀이했다면? 개발자 커피 선물하기 (클릭 복사)
+    <div class="top-account-bar" onclick="openKakaoPay()">
+        💛 무사히 살풀이했다면? 커피 선물하기 (터치 시 송금)
     </div>
 
     <div class="shrine-bg"></div>
@@ -116,12 +117,9 @@
     </div>
 
     <script>
-        // ☕ 계좌 복사 함수
-        function copyAccount() {
-            const acc = "케이뱅크 100-210-317446";
-            navigator.clipboard.writeText(acc).then(() => {
-                alert("계좌번호가 복사되었습니다! 형님, 커피 한 잔 잘 마시겠습니다! ☕\n\n" + acc);
-            });
+        // 💛 카카오페이 송금 페이지 열기
+        function openKakaoPay() {
+            window.open("https://qr.kakaopay.com/FRK8J0SAD", "_blank");
         }
 
         const karmaList = [
