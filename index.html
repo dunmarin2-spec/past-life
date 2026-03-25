@@ -8,7 +8,14 @@
     <style>
         :root { --spirit-red: #d63031; --spirit-gold: #f1c40f; --dark: #000000; --kakao-yellow: #fee500; }
         
-        body { margin: 0; font-family: 'Pretendard', sans-serif; background: var(--dark); color: #fff; display: flex; align-items: center; justify-content: center; min-height: 100vh; overflow: hidden; }
+        /* 화면 전체 설정: 중앙 정렬에서 상단 정렬로 변경하여 위로 올림 */
+        body { 
+            margin: 0; font-family: 'Pretendard', sans-serif; background: var(--dark); color: #fff; 
+            display: flex; flex-direction: column; align-items: center; 
+            min-height: 100vh; overflow-x: hidden; 
+            padding-top: 60px; /* 상단 바 공간 */
+            padding-bottom: 140px; /* 하단 광고 바 공간 확보 (버튼 가림 방지) */
+        }
         
         .shrine-bg { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: radial-gradient(circle, #1a1a1a 0%, #000 100%); z-index: -1; }
         .shrine-bg::after { content: ''; position: absolute; width: 100%; height: 100%; background: url('https://www.transparenttextures.com/patterns/dark-leather.png'); opacity: 0.3; }
@@ -20,66 +27,63 @@
             font-size: 0.95rem; border-bottom: 2px solid #000; cursor: pointer;
             box-shadow: 0 2px 10px rgba(0,0,0,0.5);
         }
-        .top-account-bar:active { background: #fada0a; }
 
+        /* 👹 중앙 카드: 마진을 조절해서 전체적으로 위로 올림 */
         .shaman-card { 
-            width: 90%; max-width: 450px; text-align: center; padding: 40px 20px; 
+            width: 90%; max-width: 450px; text-align: center; padding: 30px 20px; 
             border: 2px solid var(--spirit-red); border-radius: 5px; background: rgba(0,0,0,0.8);
-            box-shadow: 0 0 50px rgba(214, 48, 49, 0.3); position: relative; margin-top: 20px;
+            box-shadow: 0 0 50px rgba(214, 48, 49, 0.3); position: relative;
+            margin-top: 20px; /* 위로 붙임 */
         }
 
-        .shaman-img { font-size: 4rem; margin-bottom: 15px; display: block; filter: drop-shadow(0 0 10px var(--spirit-red)); animation: float 3s ease-in-out infinite; }
-        .candles { display: flex; justify-content: space-around; margin-bottom: 15px; font-size: 1.2rem; }
+        .shaman-img { font-size: 4rem; margin-bottom: 10px; display: block; filter: drop-shadow(0 0 10px var(--spirit-red)); animation: float 3s ease-in-out infinite; }
+        .candles { display: flex; justify-content: space-around; margin-bottom: 10px; font-size: 1.2rem; }
         .candle { animation: flicker 0.1s infinite; }
 
-        h1 { font-size: 1.8rem; font-weight: 900; letter-spacing: -2px; color: var(--spirit-red); text-shadow: 0 0 15px rgba(214, 48, 49, 0.8); margin: 0; }
-        .subtitle { color: #888; font-size: 0.85rem; margin-top: 8px; margin-bottom: 30px; }
+        h1 { font-size: 1.7rem; font-weight: 900; letter-spacing: -2px; color: var(--spirit-red); text-shadow: 0 0 15px rgba(214, 48, 49, 0.8); margin: 0; }
+        .subtitle { color: #888; font-size: 0.8rem; margin-top: 5px; margin-bottom: 20px; }
 
         input { 
             width: 80%; padding: 12px; border: none; border-bottom: 2px solid var(--spirit-red); 
             background: transparent; color: #fff; font-size: 1.3rem; text-align: center; outline: none; 
-            margin-bottom: 30px; font-weight: 700; transition: 0.3s;
+            margin-bottom: 25px; font-weight: 700; transition: 0.3s;
         }
-        input:focus { border-bottom-color: var(--spirit-gold); text-shadow: 0 0 10px var(--spirit-gold); }
 
         .btn-invoke { 
-            background: var(--spirit-red); color: #fff; border: none; padding: 18px; width: 90%; 
-            font-size: 1.3rem; font-weight: 900; cursor: pointer; transition: 0.2s;
+            background: var(--spirit-red); color: #fff; border: none; padding: 20px; width: 90%; 
+            font-size: 1.4rem; font-weight: 900; cursor: pointer; transition: 0.2s;
             clip-path: polygon(10% 0, 90% 0, 100% 100%, 0% 100%);
+            margin-bottom: 10px;
         }
 
         /* 결과 오버레이 */
         #result-overlay { 
             display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; 
-            background: rgba(0,0,0,0.96); z-index: 100; flex-direction: column; 
+            background: rgba(0,0,0,0.96); z-index: 400; flex-direction: column; 
             align-items: center; justify-content: center; padding: 20px;
         }
-        .amulet { 
-            background: #fdf2f2; border: 5px double var(--spirit-red); padding: 30px 20px; 
-            width: 90%; max-width: 380px; color: var(--spirit-red); box-shadow: 0 0 30px rgba(214, 48, 49, 0.5);
-            position: relative; animation: pop 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-        }
         
-        /* 🚀 하단 쿠팡 배너 */
+        /* 🚀 하단 고정 쿠팡 배너 컨테이너 */
         .fixed-banner-container {
-            position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%);
-            width: 90%; max-width: 420px; z-index: 200;
+            position: fixed; bottom: 0; left: 0; width: 100%;
+            background: #000; padding: 15px 0; z-index: 200;
+            display: flex; flex-direction: column; align-items: center;
         }
         .coupang-banner {
+            width: 90%; max-width: 420px;
             background: #111; border: 2px solid var(--spirit-gold); border-radius: 12px;
             padding: 12px; text-decoration: none; display: block;
         }
-        .cp-sub { color: #555; font-size: 0.6rem; text-align: center; margin-top: 8px; }
+        .cp-sub { color: #555; font-size: 0.6rem; text-align: center; margin-top: 5px; }
 
         @keyframes flicker { 0% { opacity: 0.8; } 50% { opacity: 1; } 100% { opacity: 0.9; } }
         @keyframes float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-10px); } }
-        @keyframes pop { from { transform: scale(0.5); opacity: 0; } to { transform: scale(1); opacity: 1; } }
     </style>
 </head>
 <body>
 
     <div class="top-account-bar" onclick="openKakaoPay()">
-        💛 무사히 살풀이했다면? 커피 선물하기 (터치 시 송금)
+        💛 살풀이 무사 기원 커피 선물하기 (터치 시 송금)
     </div>
 
     <div class="shrine-bg"></div>
@@ -100,11 +104,11 @@
     </div>
 
     <div id="result-overlay">
-        <div class="amulet">
+        <div style="background: #fdf2f2; border: 5px double var(--spirit-red); padding: 30px 20px; width: 90%; max-width: 380px; color: var(--spirit-red); position: relative; text-align: center;">
             <div id="res-name" style="font-size:1.1rem; font-weight:700; color:#333; border-bottom:1px solid var(--spirit-red); display:inline-block;"></div>
             <div id="res-crime" style="font-size:1.5rem; font-weight:900; margin:15px 0;"></div>
             <div id="res-desc" style="font-size:0.95rem; line-height:1.6; background:rgba(255,255,255,0.7); padding:12px; border-radius:5px; color:#111; font-weight:600; word-break:keep-all;"></div>
-            <button style="margin-top: 20px; width: 100%; background: #000; color: #fff; border: none; padding: 12px; font-weight: 900; cursor: pointer; border-radius: 5px;" onclick="location.reload()">살풀이 완료 (물러가기)</button>
+            <button style="margin-top: 20px; width: 100%; background: #000; color: #fff; border: none; padding: 12px; font-weight: 900; cursor: pointer;" onclick="location.reload()">살풀이 완료 (물러가기)</button>
         </div>
     </div>
 
@@ -117,7 +121,6 @@
     </div>
 
     <script>
-        // 💛 카카오페이 송금 페이지 열기
         function openKakaoPay() {
             window.open("https://qr.kakaopay.com/FRK8J0SAD", "_blank");
         }
